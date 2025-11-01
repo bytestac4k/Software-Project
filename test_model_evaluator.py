@@ -3,6 +3,7 @@ import tempfile
 import os
 from unittest.mock import Mock, patch, MagicMock
 from typing import Dict, List, Any
+from lambda_function import lambda_handler
 
 from url_classifier import URLClassifier, URLType
 from resource_handlers import ModelHandler, DatasetHandler, CodeHandler
@@ -301,6 +302,12 @@ class TestModelEvaluator(unittest.TestCase):
         finally:
             if os.path.exists(temp_log_file):
                 os.unlink(temp_log_file)
+                
+    def test_lambda_integration():
+        event = {"body": '{"urls": ["https://github.com/google-research/bert"]}'}
+        response = lambda_handler(event, None)
+        assert response["statusCode"] == 200
+
 
 
 if __name__ == '__main__':
