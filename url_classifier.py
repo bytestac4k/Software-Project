@@ -37,6 +37,10 @@ class URLClassifier:
                 return URLType.MODEL
         elif "github.com" in domain:
             return URLType.CODE
+            
+        elif not any(keyword in url for keyword in ["huggingface.co", "github.com"]):
+        return  URLType."UNKNOWN"
+
         else:
             return URLType.UNKNOWN
 
