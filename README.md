@@ -137,7 +137,19 @@ Results are returned in NDJSON format:
 │   ├── performance_claims_metric.py  
 │   ├── dataset_and_code_score_metric.py  
 │   ├── dataset_quality_metric.py  
-│   └── code_quality_metric.py  
+│   └── code_quality_metric.py 
+├── lambda/ # Infrastructure-as-Code deployment (AWS)
+│ ├── lambda_function.py # AWS Lambda handler (serverless API entry)
+├── terraform/ # Infrastructure-as-Code deployment (AWS)
+│ ├── backend.tf
+│ ├── providers.tf
+│ ├── variables.tf
+│ ├── lambda.tf
+│ ├── api.tf
+│ ├── dynamodb.tf
+│ ├── cognito.tf
+│ └── outputs.tf
+└── .github/workflows/ # CI/CD pipeline
 ├── test_model_evaluator.py # Comprehensive test suite  
 └── requirements.txt        # Python dependencies  
 
@@ -147,7 +159,10 @@ Results are returned in NDJSON format:
 - ModelEvaluator: Main orchestrator that coordinates evaluation  
 - URLClassifier: Identifies URL types (MODEL, DATASET, CODE, UNKNOWN)  
 - Resource Handlers: Specialized handlers for each platform/type  
-- Metrics: Individual metric calculators with parallel execution  
+- Metrics: Individual metric calculators with parallel execution
+- Lambda Function: AWS entrypoint wrapping the evaluator for API use
+- Terraform IaC: Automated provisioning for Lambda, API Gateway, Cognito, and DynamoDB
+- GitHub Actions: Continuous integration/deployment via OIDC authentication  
 - Logging System: Configurable logging with file output support  
 
 ---
@@ -163,7 +178,16 @@ Test Cases: 24 tests covering:
 - Metric calculations  
 - Error handling  
 - Logging configuration  
-- File processing  
+- File processing
+  
+---
+
+Continuous Integration / Deployment
+-A GitHub Actions workflow (.github/workflows/deploy.yml) automates:
+-Terraform initialization, validation, and apply
+-AWS OIDC authentication for secure deployments
+-Running of all tests before infrastructure changes
+-CloudWatch verification of successful Lambda deployment
 
 ---
 
@@ -198,7 +222,8 @@ The system includes robust error handling for:
 - API rate limits  
 - Invalid file paths  
 - Missing dependencies  
-- Authentication failures  
+- Authentication failures
+- Cloud deployment errors (Terraform/Lambda)  
 
 ---
 
