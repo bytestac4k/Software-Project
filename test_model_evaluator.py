@@ -4,6 +4,7 @@ import os
 from unittest.mock import Mock, patch, MagicMock
 from typing import Dict, List, Any
 from lambda_function import lambda_handler
+from metrics import METRIC_CLASSES
 
 from url_classifier import URLClassifier, URLType
 from resource_handlers import ModelHandler, DatasetHandler, CodeHandler
@@ -197,6 +198,12 @@ class TestMetrics(unittest.TestCase):
 
         self.assertEqual(score, 0.0)
         self.assertIsInstance(latency, int)
+
+    def test_metric_returns_valid_score(metric_name):
+        metric_class = METRIC_CLASSES[metric_name]()
+        score, latency = metric_class.calculate({URLType.MODEL: []})
+        assert isinstance(score, (float, dict))
+        assert isinstance(latency, int)
 
 
 class TestModelEvaluator(unittest.TestCase):
