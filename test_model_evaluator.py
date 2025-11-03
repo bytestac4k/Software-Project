@@ -200,6 +200,7 @@ class TestMetrics(unittest.TestCase):
         self.assertIsInstance(latency, int)
 
     def test_metric_returns_valid_score(metric_name):
+        """Test 18: Metric calculation with valid score"""
         metric_class = METRIC_CLASSES[metric_name]()
         score, latency = metric_class.calculate({URLType.MODEL: []})
         assert isinstance(score, (float, dict))
